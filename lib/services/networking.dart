@@ -14,12 +14,6 @@ class NetworkHelper {
       data = response.body;
       var decodedData = jsonDecode(data);
       return decodedData;
-
-      // int condition = decodedData['weather'][0]['id'];
-      // double temperature = decodedData['main']['temp'];
-      // String cityName = decodedData['name'];
-
-      // print('$condition $temperature $cityName');
     } else {
       print(response.statusCode);
     }
