@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:rest_api_test/services/location.dart';
+import 'package:rest_api_test/services/networking.dart';
+
+const apiKey = "d9c67e9622798cba106e3991a7eded8a";
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -8,35 +10,34 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  double latitude, longitude;
+
   @override
   void initState() {
     super.initState();
-    getLocation();
+    getLocationData();
   }
 
-  void getLocation() async {
+  void getLocationData() async {
+    // Get location data using location service
     Location location = Location();
     await location.getCurrentLocation();
-    print(location.latitude);
-    print(location.longitude);
+    latitude = location.latitude;
+    longitude = location.longitude;
+
+    // Get weather data using open weather api and weather data from above
+    String url =
+        "http://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey";
+
+    NetworkHelper networkHelper = NetworkHelper(url);
+    var weatherData = await networkHelper.getData();
+
+    // Print current location data
+    print(weatherData);
   }
 
   @override
   Widget build(BuildContext context) {
-    String myMargin = '15';
-    double myMarginAsDouble;
-
-    try {
-      myMarginAsDouble = double.parse(myMargin);
-    } catch (e) {
-      print(e);
-    }
-
-    return Scaffold(
-      body: Container(
-        margin: EdgeInsets.all(myMarginAsDouble ?? 30.0),
-        color: Colors.red,
-      ),
-    );
+    return Scaffold();
   }
 }
